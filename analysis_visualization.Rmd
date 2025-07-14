@@ -1,6 +1,9 @@
 ---
 title: "analyse_visualization"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
 ---
 
 # Buisness Task and relevent questions: 
@@ -36,6 +39,10 @@ library(skimr)
 library(tidyverse)
 library(lubridate)
 library(caTools)
+```
+
+```{r}
+load(".RData")
 ```
 
 # Data sense-check:
@@ -439,7 +446,7 @@ We obtained similar results: it seems that the time of day when people exercise 
 
 Therefore, it makes sense to target the 5–7 pm window for promoting activity goals, as this aligns with peak exercise times.
 
-# Minutes 
+# Minutes data analysis:
 
 In order to finalise our findings, let's take a closer look at the minutes data. 
 

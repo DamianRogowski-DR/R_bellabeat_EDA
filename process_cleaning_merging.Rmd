@@ -1,6 +1,8 @@
 ---
 title: "process_cleaning_merging"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 # Aproche
@@ -145,7 +147,7 @@ Datasets have the same length, let's merge it.
 ```{r}
 hourly_cis_temp <- merge(hourly_calories, hourly_intensities, by = c('id', 'activity_hour'))
 hourly_cis <- merge(hourly_cis_temp, hourly_steps, by = c('id', 'activity_hour'))
-head(daily_ais)
+head(hourly_cis)
 ```
 
 I ended up with one dataset reflecting the hourly data, called 'hourly_cis'.
