@@ -1,0 +1,328 @@
+---
+title: "process_cleaning_merging"
+output: html_notebook
+---
+
+# Aproche
+
+My analytical approach addresses the distinct characteristics of the data, which is organised into three main temporal categories: daily, hourly and minute-level datasets. I will process each of these categories independently. A critical initial step for each dataset will be to thoroughly examine its integrity and completeness to ensure data quality, before proceeding with further analysis. The same approach will be implemented for the other two data sets representing heart rate and user weight data. 
+
+## Packeages used: 
+
+```{r message=FALSE}
+library(janitor)
+library(skimr)
+library(tidyverse)
+library(lubridate)
+```
+
+## Daily Data Sets:
+
+### Importing datasets:
+```{r message=FALSE}
+activity <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/dailyActivity_merged.csv")
+  
+steps <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/dailySteps_merged.csv")
+
+intensities <- read_csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/dailyIntensities_merged.csv")
+  
+sleep <- read_csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/sleepDay_merged.csv")
+
+```
+
+Upon initial inspection, it is evident that the 'activity' dataset already contains information on calories, intensity and steps, thus eliminating the need to load a separate dataset for these metrics. The 'sleep' dataset will be kept separate due to its distinct nature.
+
+### Data cleaning:
+
+It's easier to me to work with snake_case so I 'clear_names()' in all datasets.
+
+```{r message=FALSE}
+daily_all_data_frames <- list(
+  activity = activity,
+  steps = steps,
+  intensities = intensities,
+  sleep = sleep
+)
+
+daily_cleaned_data_frames <- daily_all_data_frames %>%
+  map(~ .x %>% janitor::clean_names())
+
+list2env(daily_cleaned_data_frames, envir = .GlobalEnv)
+```
+
+Now let's have a qiuck overview of the data using *skim*.
+
+```{r}
+activity %>% skimr::skim_without_charts()
+```
+
+```{r}
+sleep %>% skimr::skim_without_charts()
+```
+
+There are no missing values in each data set. Let's check if the number of people represented by the 'id' column is the same in every dataset. 
+
+```{r}
+n_distinct(activity)
+n_distinct(sleep)
+```
+```{r}
+n_distinct(activity$id)
+n_distinct(sleep$id)
+```
+
+It's now evident that the sleep dataset contains a smaller number of users. This needs to be taken into consideration during the analysis.
+
+Daily data has been gathered from 33 people; however, only 24 users are represented in the sleep data.
+
+## Fixsing the data format:
+
+```{r}
+activity$activity_date=as.POSIXct(activity$activity_date, format="%m/%d/%Y", tz=Sys.timezone())
+```
+
+## Hourly Data Sets:
+
+### Importing datasets:
+
+```{r message=FALSE}
+hourly_calories <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/hourlyCalories_merged.csv")
+  
+hourly_intensities <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/hourlyIntensities_merged.csv")
+
+hourly_steps <- read_csv("//Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/hourlySteps_merged.csv")
+
+```
+
+Upon initial review the datasets should be merge together.
+
+### Data cleaning:
+
+```{r message=FALSE}
+hourly_all_data_frames <- list(
+  hourly_calories = hourly_calories,
+  hourly_intensities = hourly_intensities,
+  hourly_steps = hourly_steps
+)
+
+hourly_cleaned_data_frames <- hourly_all_data_frames %>%
+  map(~ .x %>% janitor::clean_names())
+
+list2env(hourly_cleaned_data_frames, envir = .GlobalEnv)
+
+```
+
+Let's again have a quick overview plus check the distinct 'id' value. 
+
+```{r}
+hourly_calories %>% skimr::skim_without_charts()
+```
+
+```{r}
+hourly_intensities %>% skimr::skim_without_charts()
+```
+
+```{r}
+hourly_steps %>% skimr::skim_without_charts()
+```
+
+```{r}
+n_distinct(hourly_calories)
+n_distinct(hourly_intensities)
+n_distinct(hourly_steps)
+```
+
+```{r}
+n_distinct(hourly_calories$id)
+n_distinct(hourly_intensities$id)
+n_distinct(hourly_steps$id)
+```
+
+Datasets have the same length, let's merge it. 
+
+### Datasets merging:
+
+```{r}
+hourly_cis_temp <- merge(hourly_calories, hourly_intensities, by = c('id', 'activity_hour'))
+hourly_cis <- merge(hourly_cis_temp, hourly_steps, by = c('id', 'activity_hour'))
+head(daily_ais)
+```
+
+I ended up with one dataset reflecting the hourly data, called 'hourly_cis'.
+
+### Fixsing the timestemp. 
+
+I would like to separate day and time from 'activity_hour'.
+
+```{r}
+hourly_cis$activity_hour=as.POSIXct(hourly_cis$activity_hour, format="%m/%d/%Y %I:%M:%S %p", tz=Sys.timezone())
+hourly_cis$time <- format(hourly_cis$activity_hour, format = "%H:%M:%S")
+hourly_cis$date <- format(hourly_cis$activity_hour, format = "%m/%d/%y")
+```
+
+## Minute Data Sets:
+
+### Importing Data:
+
+```{r}
+minute_calories <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/minuteCaloriesNarrow_merged.csv")
+  
+minute_intensities <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/minuteIntensitiesNarrow_merged.csv")
+  
+minute_METs <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/minuteMETsNarrow_merged.csv")
+  
+minute_sleep <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/minuteSleep_merged.csv")
+  
+minute_steps <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/minuteStepsNarrow_merged.csv")
+```
+
+### Data cleaning:
+
+```{r message=FALSE}
+minute_all_data_frames <- list(
+  minute_calories = minute_calories,
+  minute_intensities = minute_intensities,
+  minute_METs = minute_METs,
+  minute_sleep = minute_sleep,
+  minute_steps = minute_steps
+)
+
+minute_cleaned_data_frames <- minute_all_data_frames %>%
+  map(~ .x %>% janitor::clean_names())
+
+list2env(minute_cleaned_data_frames, envir = .GlobalEnv)
+```
+
+Overview of data. 
+
+```{r}
+minute_calories %>% skimr::skim_without_charts()
+```
+
+```{r}
+minute_intensities %>% skimr::skim_without_charts()
+```
+
+```{r}
+minute_METs %>% skimr::skim_without_charts()
+```
+
+```{r}
+minute_sleep %>% skimr::skim_without_charts()
+```
+
+```{r}
+minute_steps %>% skimr::skim_without_charts()
+```
+Check unique 'id'. 
+
+```{r}
+n_distinct(minute_calories) 
+n_distinct(minute_intensities)
+n_distinct(minute_METs)
+n_distinct(minute_sleep)
+n_distinct(minute_steps)
+```
+```{r}
+n_distinct(minute_calories$id) 
+n_distinct(minute_intensities$id)
+n_distinct(minute_METs$id)
+n_distinct(minute_sleep$id)
+n_distinct(minute_steps$id)
+```
+As expected, the 'minute_sleep' data frame contains data from a smaller number of distinct people. 
+
+### Datasets merging:
+
+```{r}
+minute_ci_temp <- merge(minute_calories, minute_intensities,
+                        by = c("id", "activity_minute"))
+
+
+minute_cim_temp <- merge(minute_ci_temp, minute_METs,
+                         by = c("id", "activity_minute"))
+
+
+minute_ciMs <- merge(minute_cim_temp, minute_steps,
+                            by = c("id", "activity_minute"))
+
+head(minute_ciMs)               
+```
+
+I ended up with one dataset reflecting the minutes data, called 'minute_ciMs'.
+
+### Fixsing the timestemp. 
+
+```{r}
+minute_ciMs$activity_minute=as.POSIXct(minute_ciMs$activity_minute, format="%m/%d/%Y %I:%M:%S %p", tz=Sys.timezone())
+minute_ciMs$time <- format(minute_ciMs$activity_minute, format = "%H:%M:%S")
+minute_ciMs$date <- format(minute_ciMs$activity_minute, format = "%m/%d/%y")
+```
+
+```{r}
+minute_sleep$date=as.POSIXct(minute_sleep$date, format="%m/%d/%Y %I:%M:%S %p", tz=Sys.timezone())
+minute_sleep$time <- format(minute_sleep$date, format = "%H:%M:%S")
+minute_sleep$date <- format(minute_sleep$date, format = "%m/%d/%y")
+```
+
+## Weight and Heartrate Data Sets:
+
+### Importing Data:
+
+```{r message=FALSE}
+weight <- read_csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/weightLogInfo_merged.csv")
+
+heartrate <- read_csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/heartrate_seconds_merged.csv")
+```
+
+### Data cleaning:
+
+```{r message=FALSE}
+weight <- clean_names(weight)
+heartrate <- clean_names(heartrate)
+```
+
+```{r}
+weight %>% skimr::skim_without_charts()
+```
+We can see that for 'fat' column most values are not complete (97.015%).
+
+```{r}
+heartrate %>% skimr::skim_without_charts()
+```
+
+```{r}
+n_distinct(weight$id)
+n_distinct(heartrate$id)
+```
+
+Unfortunately, the group of users from which the 'weight' data is taken is too small to draw any conclusions. Even the 'heart rate' data is based on a small sample.
+
+### Fixsing taamesteps:
+
+```{r}
+weight$date=as.POSIXct(weight$date, format="%m/%d/%Y %I:%M:%S %p", tz=Sys.timezone())
+weight$time <- format(weight$date, format = "%H:%M:%S")
+weight$date <- format(weight$date, format = "%m/%d/%y")
+```
+
+```{r}
+heartrate$time=as.POSIXct(heartrate$time, format="%m/%d/%Y %I:%M:%S %p", tz=Sys.timezone())
+heartrate$date <- format(heartrate$time, format = "%m/%d/%y")
+heartrate$time_sec <- format(heartrate$time, format = "%H:%M:%S")
+
+```
+
+# Summary:
+
+Following data cleaning and merging operations, I've consolidated user activity information into three primary datasets, encompassing 33 unique users: 'daily_ais', 'hourly_cis' and 'minute_ciMs'. Sleep data requires independent analysis due to its user base, comprising 24 users with both daily and minute-level granularity. Heart rate data shows promise for limited integration into the overall analysis, despite its restricted user base. Contrarily, the weight dataset is currently deemed to have insufficient user representation for meaningful inclusion.
+
+List of dataframs that will be used for futher analysis:
+
+* daily_ais
+* hourly_cis
+* minute_ciMs
+* sleep
+* minute_sleep
+* heartrate
+
