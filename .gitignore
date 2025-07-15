@@ -2,7 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
-.process_cleaning_merging.nb.html
-.process_cleaning_merging.html
-.analysis_visualization.nb.html
-.analysis_visualization.html
+*.html
+*.nb.html
