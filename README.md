@@ -27,9 +27,9 @@ Let's break down the main question:
 
 My analysis is structured within two primary R notebooks:
 
-process_cleaning_merging.Rmd [link]: This notebook meticulously outlines my approach to data cleaning and preprocessing. It demonstrates my ability to transform data into a clean, usable format ready for analysis.
+[process_cleaning_merging.pdf](https://github.com/DamianRogowski-DR/R_bellabeat_EDA/blob/main/process_cleaning_merging.pdf): This notebook meticulously outlines my approach to data cleaning and preprocessing. It demonstrates my ability to transform data into a clean, usable format ready for analysis.
 
-analysis_visualization.Rmd [link]: Here, you'll find a comprehensive journey through my exploratory data analysis. This notebook showcases my critical thinking and ability to extract actionable insights from data.
+[analysis_visualization.pdf](https://github.com/DamianRogowski-DR/R_bellabeat_EDA/blob/main/analysis_visualization.pdf): Here, you'll find a comprehensive journey through my exploratory data analysis. This notebook showcases my critical thinking and ability to extract actionable insights from data.
 
 These notebooks aren't just code; they represent my end-to-end data science process, from initial data understanding to final conclusions. They're designed to give you a clear picture of how I think and operate as a data professional.
 
