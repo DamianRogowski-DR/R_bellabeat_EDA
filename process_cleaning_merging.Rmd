@@ -7,11 +7,11 @@ output:
   word_document: default
 ---
 
-# Aproche
+# Approach:
 
 My analytical approach addresses the distinct characteristics of the data, which is organised into three main temporal categories: daily, hourly and minute-level datasets. I will process each of these categories independently. A critical initial step for each dataset will be to thoroughly examine its integrity and completeness to ensure data quality, before proceeding with further analysis. The same approach will be implemented for the other two data sets representing heart rate and user weight data. 
 
-## Packeages used: 
+## Packages used: 
 
 ```{r message=FALSE}
 library(janitor)
@@ -20,7 +20,7 @@ library(tidyverse)
 library(lubridate)
 ```
 
-## Daily Data Sets:
+## Daily data sets:
 
 ### Importing datasets:
 ```{r message=FALSE}
