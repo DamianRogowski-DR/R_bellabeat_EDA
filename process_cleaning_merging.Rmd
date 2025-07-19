@@ -18,19 +18,29 @@ library(janitor)
 library(skimr)
 library(tidyverse)
 library(lubridate)
+library(here)
+library(readr)
 ```
 
 ## Daily data sets:
 
 ### Importing datasets:
-```{r message=FALSE}
-activity <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/dailyActivity_merged.csv")
-  
-steps <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/dailySteps_merged.csv")
+```{r import_data}
+activity <- read.csv(here("mturkfitbit_export_4.12.16-5.12.16",
+                           "Fitabase Data 4.12.16-5.12.16",
+                           "dailyActivity_merged.csv"))
 
-intensities <- read_csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/dailyIntensities_merged.csv")
-  
-sleep <- read_csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/sleepDay_merged.csv")
+steps <- read.csv(here("mturkfitbit_export_4.12.16-5.12.16",
+                        "Fitabase Data 4.12.16-5.12.16",
+                        "dailySteps_merged.csv"))
+
+intensities <- read_csv(here("mturkfitbit_export_4.12.16-5.12.16",
+                              "Fitabase Data 4.12.16-5.12.16",
+                              "dailyIntensities_merged.csv"))
+
+sleep <- read_csv(here("mturkfitbit_export_4.12.16-5.12.16",
+                        "Fitabase Data 4.12.16-5.12.16",
+                        "sleepDay_merged.csv"))
 
 ```
 
@@ -89,12 +99,18 @@ activity$activity_date=as.POSIXct(activity$activity_date, format="%m/%d/%Y", tz=
 
 ### Importing datasets:
 
-```{r message=FALSE}
-hourly_calories <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/hourlyCalories_merged.csv")
+```{r import_hourly_data, message=FALSE}
+hourly_calories <- read.csv(here("mturkfitbit_export_4.12.16-5.12.16",
+                                  "Fitabase Data 4.12.16-5.12.16",
+                                  "hourlyCalories_merged.csv"))
   
-hourly_intensities <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/hourlyIntensities_merged.csv")
+hourly_intensities <- read.csv(here("mturkfitbit_export_4.12.16-5.12.16",
+                                   "Fitabase Data 4.12.16-5.12.16",
+                                   "hourlyIntensities_merged.csv"))
 
-hourly_steps <- read_csv("//Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/hourlySteps_merged.csv")
+hourly_steps <- read_csv(here("mturkfitbit_export_4.12.16-5.12.16",
+                               "Fitabase Data 4.12.16-5.12.16",
+                               "hourlySteps_merged.csv"))
 
 ```
 
@@ -168,16 +184,26 @@ hourly_cis$date <- format(hourly_cis$activity_hour, format = "%m/%d/%y")
 
 ### Importing Data:
 
-```{r}
-minute_calories <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/minuteCaloriesNarrow_merged.csv")
+```{r import_minute_data, message=FALSE}
+minute_calories <- read.csv(here("mturkfitbit_export_4.12.16-5.12.16",
+                                  "Fitabase Data 4.12.16-5.12.16",
+                                  "minuteCaloriesNarrow_merged.csv"))
   
-minute_intensities <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/minuteIntensitiesNarrow_merged.csv")
+minute_intensities <- read.csv(here("mturkfitbit_export_4.12.16-5.12.16",
+                                   "Fitabase Data 4.12.16-5.12.16",
+                                   "minuteIntensitiesNarrow_merged.csv"))
   
-minute_METs <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/minuteMETsNarrow_merged.csv")
+minute_METs <- read.csv(here("mturkfitbit_export_4.12.16-5.12.16",
+                             "Fitabase Data 4.12.16-5.12.16",
+                             "minuteMETsNarrow_merged.csv"))
   
-minute_sleep <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/minuteSleep_merged.csv")
+minute_sleep <- read.csv(here("mturkfitbit_export_4.12.16-5.12.16",
+                              "Fitabase Data 4.12.16-5.12.16",
+                              "minuteSleep_merged.csv"))
   
-minute_steps <- read.csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/minuteStepsNarrow_merged.csv")
+minute_steps <- read.csv(here("mturkfitbit_export_4.12.16-5.12.16",
+                              "Fitabase Data 4.12.16-5.12.16",
+                              "minuteStepsNarrow_merged.csv"))
 ```
 
 ### Data cleaning:
@@ -273,10 +299,14 @@ minute_sleep$date <- format(minute_sleep$date, format = "%m/%d/%y")
 
 ### Importing Data:
 
-```{r message=FALSE}
-weight <- read_csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/weightLogInfo_merged.csv")
+```{r import_health_data, message=FALSE}
+weight <- read_csv(here("mturkfitbit_export_4.12.16-5.12.16",
+                         "Fitabase Data 4.12.16-5.12.16",
+                         "weightLogInfo_merged.csv"))
 
-heartrate <- read_csv("/Users/damianrogowski/Desktop/bellabeat/archive/mturkfitbit_export_4.12.16-5.12.16/Fitabase Data 4.12.16-5.12.16/heartrate_seconds_merged.csv")
+heartrate <- read_csv(here("mturkfitbit_export_4.12.16-5.12.16",
+                            "Fitabase Data 4.12.16-5.12.16",
+                            "heartrate_seconds_merged.csv"))
 ```
 
 ### Data cleaning:
