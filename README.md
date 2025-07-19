@@ -1,6 +1,12 @@
+# Introduction to the Case Study:
+
+This case study is a part of the Google Data Analytics Professional Certificate program. It provided a valuable opportunity to apply and enhance my R coding skills, focusing on exploratory data analysis (EDA) to uncover key insights that can drive future product development.
+
+The dataset used for this analysis is the [FitBit Fitness Tracker Data](https://www.kaggle.com/datasets/arashnic/fitbit). 
+
 # Buisness Task and relevent questions: 
 
-When starting the analysis, it is only natural to define what we are looking for, depending on the business task set by our stakeholders. In this case, we have been asked to analyse smart device usage data to find out how customers use competitors' devices. Then, based on the key findings that we will present, we need to select the products that will be developed. 
+When starting the analysis, it is only natural to define what we are looking for, depending on the business task set by our stakeholders. In this case, I have been asked to analyse smart device usage data to find out how customers use competitors' devices. Then, based on the key findings I present, I will select the products to be developed. 
 
 Let's break down the main question:
 
